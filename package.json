@@ -1,0 +1,9 @@
+{
+  "name": "opencli-plugin-dtminds",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "OpenCLI plugin: dtminds Admin",
+  "peerDependencies": {
+    "@jackwener/opencli": ">=1.0.0"
+  }
+}
