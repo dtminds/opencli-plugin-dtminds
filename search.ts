@@ -9,7 +9,7 @@ interface Search {
 }
 
 cli({
-  site: 'iyouke',
+  site: 'dtminds',
   name: 'search',
   description: '搜索用户信息',
   domain: 'boss.dtminds.com',

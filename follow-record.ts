@@ -12,7 +12,7 @@ interface FollowRecord {
 }
 
 cli({
-  site: 'iyouke',
+  site: 'dtminds',
   name: 'follow-record',
   description: '获取跟进记录列表',
   domain: 'scrm-api.iyouke.com',
