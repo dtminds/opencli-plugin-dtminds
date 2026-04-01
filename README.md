@@ -18,7 +18,7 @@ opencli plugin update dtminds
 ## Uninstall
 
 ```bash
-opencli plugin uninstall github:dtminds/opencli-plugin-dtminds
+opencli plugin uninstall dtminds
 ```
 
 ## Usage
