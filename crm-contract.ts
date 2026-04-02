@@ -10,17 +10,17 @@ interface SystemTypeDuration {
 const BIZ_STATUS_MAP: Record<number, string> = {
   0: '草稿',
   1: '审批中',
-  2: '审核通过未归档',
+  2: '已通过',
   3: '已归档',
-  4: '审批不通过',
+  4: '已驳回',
   5: '已撤销',
 };
 
 const ORDER_STATUS_MAP: Record<number, string> = {
   0: '审批中',
   1: '审批通过,待分配跟进人',
-  2: '审批不通过',
-  3: '已完成',
+  2: '已驳回',
+  3: '已通过',
   4: '已取消',
   5: '已撤销',
 };
@@ -37,9 +37,23 @@ const CONTRACT_TYPE_MAP: Record<number, string> = {
   1: '标准化合同-新签',
   2: '标准化合同-续费',
   3: '标准化合同-增购',
+  4: '定制化合同',
+};
+
+const PLATFORM_MAP: Record<number, string> = {
+  1: '星云有客',
+  2: '幸运粉丝通',
+  3: '星云微氪',
 };
 
 function formatDate(timestamp: number): string {
+  if (!timestamp) return '-';
+  const d = new Date(timestamp * 1000);
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatDatetime(timestamp: number): string {
   if (!timestamp) return '-';
   const d = new Date(timestamp * 1000);
   const pad = (n: number) => n.toString().padStart(2, '0');
@@ -94,7 +108,7 @@ cli({
     { name: 'startTime', type: 'int', default: null, help: '开始时间戳' },
     { name: 'endTime', type: 'int', default: null, help: '结束时间戳' },
   ],
-  columns: ['id', 'contractNum', 'corpFullName', 'contractAmt', 'bizStatus', 'startTime', 'endTime', 'submitWorkUserName'],
+  columns: ['id', 'contractNum', 'corpFullName', 'contractAmt', 'bizStatus', 'startTime', 'endTime', 'systemTypeDurations', 'submitWorkUserName'],
   func: async (page: IPage, kwargs: Record<string, unknown>) => {
     const crmProductIdsStr = (kwargs.crmProductIds as string) || '';
     const crmProductIds = crmProductIdsStr
@@ -174,10 +188,16 @@ cli({
       endTime: formatDate(r.endTime),
       signTime: formatDate(r.signTime),
       serviceDuration: r.serviceDuration,
+      systemTypeDurations: (r.systemTypeDurations || [])
+        .map((s) => {
+          const platform = PLATFORM_MAP[s.platform] || '其他';
+          return `${platform}-${formatDate(s.startTime)}至${formatDate(s.endTime)}`;
+        })
+        .join('; ') || '-',
       submitWorkUserId: r.submitWorkUserId,
       submitWorkUserName: r.submitWorkUserName,
       wxApprovalNum: r.wxApprovalNum,
-      createTime: formatDate(r.createTime),
+      createTime: formatDatetime(r.createTime),
     }));
   },
 });
