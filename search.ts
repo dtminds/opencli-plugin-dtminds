@@ -1,11 +1,63 @@
 import { cli, Strategy } from '@jackwener/opencli/registry';
 import type { IPage } from '@jackwener/opencli/types';
 
+interface UserPackageInfo {
+  packageId: number;
+  platform: number;
+  packageSort: number;
+  packageIsTrial: boolean;
+  name: string;
+  endTime: number;
+}
+
+interface PackageButton {
+  openPackage: boolean;
+  renewalPackage: boolean;
+  upgradePackage: boolean;
+  delayPackage: boolean;
+}
+
+interface UserOperateButtonTO {
+  packageButtonTOMap: Record<string, PackageButton>;
+}
+
 interface Search {
   uid: number;
-  companyAlias: string;
   account: string;
+  corpId: number;
+  workCorpId: string;
+  shopId: number;
+  bytedanceShopId: number;
+  companyName: string;
+  companyAlias: string;
+  secrecy: number;
+  province: number;
+  city: number;
+  address: string;
+  sellerWorkUserId: number;
   seller: string;
+  weChatCorpName: string;
+  source: number;
+  createTime: string;
+  followUpPeople: string;
+  followUpPeopleWorkUserId: number;
+  userPackageInfos: UserPackageInfo[];
+  status: number;
+  loginTime: number;
+  industryId: number;
+  industryName: string;
+  userIndustryId: number;
+  followWorkUserId: number;
+  followWorkUser: string;
+  implementStatus: number;
+  channelStatus: number;
+  addFansStatus: number;
+  miniappStatus: number;
+  implementStage: number;
+  authStatus: number;
+  userOperateButtonTO: UserOperateButtonTO;
+  sops: unknown[];
+  dealProblemControl: number;
 }
 
 cli({
@@ -21,7 +73,28 @@ cli({
     { name: 'page', type: 'int', default: 1, help: '页码' },
     { name: 'pageSize', type: 'int', default: 10, help: '每页数量' },
   ],
-  columns: ['uid', 'companyAlias', 'account', 'seller'],
+  columns: [
+    'uid',
+    'companyAlias',
+    'companyName',
+    'account',
+    'corpId',
+    'shopId',
+    'bytedanceShopId',
+    'workCorpId',
+    'sellerWorkUserId',
+    'seller',
+    'followWorkUserId',
+    'followWorkUser',
+    'followUpPeopleWorkUserId',
+    'followUpPeople',
+    'industryId',
+    'industryName',
+    'status',
+    'packageInfos',
+    'createTime',
+    'loginTime',
+  ],
   func: async (page: IPage, kwargs: Record<string, unknown>) => {
     const body = {
       companyAlias: kwargs.companyAlias ?? '',
@@ -63,8 +136,36 @@ cli({
     return records.map((r) => ({
       uid: r.uid,
       companyAlias: r.companyAlias || '',
+      companyName: r.companyName || '',
       account: r.account || '',
+      corpId: r.corpId,
+      shopId: r.shopId,
+      bytedanceShopId: r.bytedanceShopId,
+      workCorpId: r.workCorpId || '',
+      sellerWorkUserId: r.sellerWorkUserId || '',
       seller: r.seller || '',
+      followWorkUserId: r.followWorkUserId || '',
+      followWorkUser: r.followWorkUser || '',
+      followUpPeopleWorkUserId: r.followUpPeopleWorkUserId || '',
+      followUpPeople: r.followUpPeople || '',
+      industryId: r.industryId || '',
+      industryName: r.industryName || '',
+      status: r.status === 1 ? '正常' : r.status === 0 ? '已禁用' : '未知',
+      packageInfos: (r.userPackageInfos || [])
+        .map((p) => {
+          const platformMap: Record<number, string> = { 1: '星云有客', 2: '幸运粉丝通', 3: '星云微氪' };
+          const platform = platformMap[p.platform] || '其他';
+          const expireDate = p.endTime
+            ? new Date(p.endTime * 1000).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+            : '无期限';
+          const type = p.packageIsTrial ? '试用套餐' : '正式套餐';
+          return `${platform}-${p.name}-${type}-到期时间:${expireDate}`;
+        })
+        .join('; ') || '',
+      createTime: r.createTime || '',
+      loginTime: r.loginTime
+        ? new Date(r.loginTime * 1000).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+        : '',
     }));
   },
 });
