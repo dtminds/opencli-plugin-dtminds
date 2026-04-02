@@ -102,7 +102,7 @@ cli({
     { name: 'contractNum', type: 'string', default: '', help: '合同编号' },
     { name: 'corpFullName', type: 'string', default: '', help: '签约主体' },
     { name: 'orderNum', type: 'string', default: '', help: '订单号' },
-    { name: 'bizStatus', type: 'int', default: null, help: '合同状态：0、草稿 1、审批中 2、审核通过未归档 3、已归档 4、审批不通过 5、已撤销' },
+    { name: 'bizStatus', type: 'int', default: null, help: '合同状态：0、草稿 1、审批中 2、已通过 3、已归档 4、已驳回 5、已撤销' },
     { name: 'crmProductIds', type: 'string', default: null, help: '产品IDS数组，多个用逗号分隔，如：[1,2]' },
     { name: 'timeType', type: 'int', default: null, help: '时间类型：1、合同开始时间 2、合同结束时间' },
     { name: 'startTime', type: 'int', default: null, help: '开始时间戳' },
