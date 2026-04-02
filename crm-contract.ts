@@ -170,7 +170,7 @@ cli({
     return records.map((r) => ({
       id: r.id,
       orderId: r.orderId,
-      type: `${r.type}-${CONTRACT_TYPE_MAP[r.type] ?? '未知'}`,
+      type: `${CONTRACT_TYPE_MAP[r.type] ?? '未知'}`,
       contractNum: r.contractNum,
       corpFullName: r.corpFullName,
       ourCorpFullName: `${OUR_CORP_FULL_NAME_MAP[r.ourCorpFullName] ?? '未知'}`,
@@ -179,7 +179,6 @@ cli({
       corpName: r.corpName,
       productCount: r.productCount,
       contractAmt: r.contractAmt,
-      attachment: r.attachment,
       bizStatus: `${BIZ_STATUS_MAP[r.bizStatus] ?? '未知'}`,
       allowOrderStatus: r.allowOrderStatus,
       contractOrderStatus: r.contractOrderStatus,
