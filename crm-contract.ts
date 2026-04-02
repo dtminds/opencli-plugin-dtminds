@@ -101,18 +101,27 @@ cli({
       ? crmProductIdsStr.split(',').map((id) => parseInt(id.trim(), 10)).filter((id) => !isNaN(id))
       : [];
 
-    const body = {
+    const body: Record<string, unknown> = {
       page: kwargs.page ?? 1,
       pageSize: kwargs.pageSize ?? 10,
       contractNum: kwargs.contractNum || '',
       corpFullName: kwargs.corpFullName || '',
       orderNum: kwargs.orderNum || '',
-      bizStatus: kwargs.bizStatus ?? 0,
       crmProductIds,
-      timeType: kwargs.timeType ?? 1,
-      startTime: kwargs.startTime ?? 0,
-      endTime: kwargs.endTime ?? 0,
     };
+
+    if (kwargs.bizStatus != null) {
+      body.bizStatus = kwargs.bizStatus;
+    }
+    if (kwargs.timeType != null) {
+      body.timeType = kwargs.timeType;
+    }
+    if (kwargs.startTime != null) {
+      body.startTime = kwargs.startTime;
+    }
+    if (kwargs.endTime != null) {
+      body.endTime = kwargs.endTime;
+    }
 
     const result = await page.evaluate(`
       (async () => {
