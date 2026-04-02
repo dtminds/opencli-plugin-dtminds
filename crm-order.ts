@@ -11,20 +11,20 @@ const BIZ_STATUS_MAP: Record<number, string> = {
 };
 
 const INVOICE_STATUS_MAP: Record<number, string> = {
-  -1: '未开票',
+  '-1': '未开票',
   0: '申请开票中',
   1: '已开票',
 };
 
 const PAY_STATUS_MAP: Record<number, string> = {
-  -2: '无需回款',
-  -1: '未回款',
+  '-2': '无需回款',
+  '-1': '未回款',
   0: '部分回款',
   1: '全部回款',
 };
 
 const IMPL_STATUS_MAP: Record<number, string> = {
-  -1: '未实施',
+  '-1': '未实施',
   0: '部分实施',
   1: '全部实施',
 };
