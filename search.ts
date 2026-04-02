@@ -132,6 +132,12 @@ cli({
       throw new Error(`API错误: ${result?.error ?? '未知错误'}`);
     }
 
+    const formatDate = (ts: number) => {
+      const d = new Date(ts * 1000);
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+
     const records = (result.list ?? []) as Search[];
     return records.map((r) => ({
       uid: r.uid,
@@ -155,17 +161,13 @@ cli({
         .map((p) => {
           const platformMap: Record<number, string> = { 1: '星云有客', 2: '幸运粉丝通', 3: '星云微氪' };
           const platform = platformMap[p.platform] || '其他';
-          const expireDate = p.endTime
-            ? new Date(p.endTime * 1000).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
-            : '无期限';
+          const expireDate = p.endTime ? formatDate(p.endTime) : '无期限';
           const type = p.packageIsTrial ? '试用套餐' : '正式套餐';
           return `${platform}-${p.name}-${type}-到期时间:${expireDate}`;
         })
         .join('; ') || '',
       createTime: r.createTime || '',
-      loginTime: r.loginTime
-        ? new Date(r.loginTime * 1000).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
-        : '',
+      loginTime: r.loginTime ? formatDate(r.loginTime) : '',
     }));
   },
 });
