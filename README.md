@@ -29,6 +29,12 @@ opencli dtminds search --companyAlias 一头牛
 
 # 获取跟进记录列表
 opencli dtminds follow-record --uid 40
+
+# 获取销售合同列表
+opencli dtminds crm-contract --uid 40
+
+# 获取销售订单列表
+opencli dtminds crm-order --uid 40
 ```
 
 ## How It Works

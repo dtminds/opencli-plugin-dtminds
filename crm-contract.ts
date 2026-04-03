@@ -99,6 +99,7 @@ cli({
   args: [
     { name: 'page', type: 'int', default: 1, help: '页码' },
     { name: 'pageSize', type: 'int', default: 10, help: '每页条数' },
+    { name: 'uid', type: 'int', default: 0, help: '用户UID' },
     { name: 'contractNum', type: 'string', default: '', help: '合同编号' },
     { name: 'corpFullName', type: 'string', default: '', help: '签约主体' },
     { name: 'orderNum', type: 'string', default: '', help: '订单号' },
@@ -135,6 +136,9 @@ cli({
     }
     if (kwargs.endTime != null) {
       body.endTime = kwargs.endTime;
+    }
+    if (kwargs.uid != null && kwargs.uid !== 0) {
+      body.uid = kwargs.uid;
     }
 
     const result = await page.evaluate(`
