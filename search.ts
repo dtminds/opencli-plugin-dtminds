@@ -72,6 +72,10 @@ cli({
     { name: 'companyAlias', type: 'string', default: '', help: '品牌名称（模糊搜索）' },
     { name: 'page', type: 'int', default: 1, help: '页码' },
     { name: 'pageSize', type: 'int', default: 10, help: '每页数量' },
+    { name: 'status', type: 'string', default: '', help: '状态筛选（1:正常, 0:已禁用）' },
+    { name: 'packageIds', type: 'string', default: '', help: '套餐ID，多个用逗号分隔（如: 15,16）' },
+    { name: 'followUpPeopleWorkUserIds', type: 'string', default: '', help: '跟进人workUserId，多个用逗号分隔（如: 180377,180378）' },
+    { name: 'platformPackageQueryMap', type: 'string', default: '', help: '套餐平台查询条件，格式: 平台ID:套餐状态:过期开始时间:过期结束时间，多个平台用逗号分隔 示例: 1:1:2026-04-05 00:00:00:2026-05-31 23:59:59,2:1::,3::2026-04-01 00:00:00:2026-04-04 23:59:59' },
   ],
   columns: [
     'uid',
@@ -96,9 +100,39 @@ cli({
     'loginTime',
   ],
   func: async (page: IPage, kwargs: Record<string, unknown>) => {
+    // 构建 platformPackageQueryMap
+    const platformPackageQueryMap: Record<string, Record<string, string>> = {};
+    const platformPackageQueryMapStr = (kwargs.platformPackageQueryMap as string) ?? '';
+    if (platformPackageQueryMapStr) {
+      const platforms = platformPackageQueryMapStr.split(',');
+      for (const p of platforms) {
+        const parts = p.split(':');
+        const platformId = parts[0];
+        if (platformId) {
+          const condition: Record<string, string> = {};
+          if (parts[1]) condition.status = parts[1];
+          if (parts[2]) condition.expireStartTime = parts[2];
+          if (parts[3]) condition.expireEndTime = parts[3];
+          if (Object.keys(condition).length > 0) {
+            platformPackageQueryMap[platformId] = condition;
+          }
+        }
+      }
+    }
+
+    // 解析逗号分隔的数组参数
+    const parseArrayParam = (val: unknown): number[] | undefined => {
+      if (!val || typeof val !== 'string' || val.trim() === '') return undefined;
+      const nums = val.split(',').map((s) => parseInt(s.trim(), 10)).filter((n) => !isNaN(n));
+      return nums.length > 0 ? nums : undefined;
+    };
+
     const body = {
       companyAlias: kwargs.companyAlias ?? '',
-      platformPackageQueryMap: {},
+      status: kwargs.status ? String(kwargs.status) : undefined,
+      packageIds: parseArrayParam(kwargs.packageIds),
+      followUpPeopleWorkUserIds: parseArrayParam(kwargs.followUpPeopleWorkUserIds),
+      platformPackageQueryMap: Object.keys(platformPackageQueryMap).length > 0 ? platformPackageQueryMap : undefined,
       page: kwargs.page ?? 1,
       pageSize: kwargs.pageSize ?? 10,
     };
