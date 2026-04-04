@@ -75,7 +75,7 @@ cli({
     { name: 'status', type: 'string', default: '', help: '状态筛选（1:正常, 0:已禁用）' },
     { name: 'packageIds', type: 'string', default: '', help: '套餐ID，多个用逗号分隔（如: 15,16）' },
     { name: 'followUpPeopleWorkUserIds', type: 'string', default: '', help: '跟进人workUserId，多个用逗号分隔（如: 180377,180378）' },
-    { name: 'platformPackageQueryMap', type: 'string', default: '', help: '套餐平台查询条件，格式: 平台ID:套餐状态:过期开始时间:过期结束时间，多个平台用逗号分隔 示例: 1:1:2026-04-05 00:00:00:2026-05-31 23:59:59,2:1::,3::2026-04-01 00:00:00:2026-04-04 23:59:59' },
+    { name: 'platformPackageQueryMap', type: 'string', default: '', help: '套餐平台查询，格式: 平台ID#套餐状态#过期开始时间#过期结束时间，多个平台用逗号分隔 示例: 1#1#2026-04-05 00:00:00#2026-05-31 23:59:59,2#1##,3##2026-04-01 00:00:00#2026-04-04 23:59:59' },
   ],
   columns: [
     'uid',
@@ -106,7 +106,7 @@ cli({
     if (platformPackageQueryMapStr) {
       const platforms = platformPackageQueryMapStr.split(',');
       for (const p of platforms) {
-        const parts = p.split(':');
+        const parts = p.split('#');
         const platformId = parts[0];
         if (platformId) {
           const condition: Record<string, string> = {};
