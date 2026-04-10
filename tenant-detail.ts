@@ -86,7 +86,7 @@ interface TenantDetail {
 cli({
   site: 'dtminds',
   name: 'tenant-detail',
-  description: '查询用户详情',
+  description: '查询租户详情',
   domain: 'boss.dtminds.com',
   strategy: Strategy.HEADER,
   navigateBefore: 'https://boss.dtminds.com',
@@ -121,7 +121,6 @@ cli({
     'externalChatNum',
     'accountAssets',
     'cdpData',
-    'userOperateButtonTO',
     'implementStatus',
     'channelStatus',
     'addFansStatus',
@@ -209,7 +208,6 @@ cli({
         .map((a) => `${a.name}:${a.balance}${a.unit}`)
         .join('; ') || '',
       cdpData: r.cdpData ? `已同步订单数:${r.cdpData.syncOrder},可同步订单数：${r.cdpData.syncOrderQuota},可添加达人数:${r.cdpData.tenantCount},可添加店铺数:${r.cdpData.shopCount},可添加小程序数:${r.cdpData.syncUnionidShopCount},可添加渠道数:${r.cdpData.platformCount},同步时间:${r.cdpData.syncStartTime}~${r.cdpData.syncEndTime}` : '',
-      userOperateButtonTO: JSON.stringify(r.userOperateButtonTO || {}),
       implementStatus: r.implementStatus === 0 ? '实施中' : r.implementStatus === 1 ? '已实施' : '未知',
       channelStatus: r.channelStatus === 0 ? '不需要' : r.channelStatus === 1 ? '未授权' : r.channelStatus === 2 ? '已授权' : '未知',
       addFansStatus: r.addFansStatus === 0 ? '有需要还没配置' : r.addFansStatus === 1 ? '已完成一项配置' : r.addFansStatus === 2 ? '已完成2项及以上配置' : r.addFansStatus === 3 ? '不需要' : r.addFansStatus === 4 ? '问题客户' : '未知',

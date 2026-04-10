@@ -63,7 +63,7 @@ interface Search {
 cli({
   site: 'dtminds',
   name: 'search',
-  description: '搜索用户信息',
+  description: '搜索租户信息',
   domain: 'boss.dtminds.com',
   strategy: Strategy.HEADER,
   navigateBefore: 'https://boss.dtminds.com',

@@ -27,6 +27,9 @@ opencli plugin uninstall dtminds
 # 搜索租户信息
 opencli dtminds search --companyAlias 一头牛
 
+# 查询租户详情
+opencli dtminds tenant-detail --uid 40
+
 # 获取跟进记录列表
 opencli dtminds follow-record --uid 40
 
